@@ -4,9 +4,9 @@
 Designed as a base for ISLE components requiring Tomcat and Oracle Java.
 
 Based on:  
-  - [ISLE-ubuntu-basebox](https://hub.docker.com/r/benjaminrosner/isle-ubuntu-basebox/)
+  - [ISLE-ubuntu-basebox](https://hub.docker.com/r/islandoracollabgroup/isle-ubuntu-basebox/)
     - Ubuntu 18.04 "Bionic"
-    - General Dependencies (@see [ISLE-ubuntu-basebox](https://hub.docker.com/r/benjaminrosner/isle-ubuntu-basebox/))
+    - General Dependencies (@see [ISLE-ubuntu-basebox](https://hub.docker.com/r/islandoracollabgroup/isle-ubuntu-basebox/))
     - Oracle Java Server JRE.
  - [Tomcat 8.5.34](https://tomcat.apache.org/)
 
