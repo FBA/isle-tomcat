@@ -4,31 +4,39 @@
 Designed as a base for ISLE components requiring Tomcat and Oracle Java.
 
 Based on:  
- - Ubuntu 18.04 "Bionic"
- - [Tomcat 8.5.31](https://tomcat.apache.org/)
- - Oracle Java 8.x latest (via APT repo.)
+  - [ISLE-ubuntu-basebox](https://hub.docker.com/r/islandoracollabgroup/isle-ubuntu-basebox/)
+    - Ubuntu 18.04 "Bionic"
+    - General Dependencies (@see [ISLE-ubuntu-basebox](https://hub.docker.com/r/islandoracollabgroup/isle-ubuntu-basebox/))
+    - Oracle Java Server JRE.
+ - [Tomcat 8.5.34](https://tomcat.apache.org/)
 
 Contains and Includes:
-  - [S6 Overlay](https://github.com/just-containers/s6-overlay) to manage services
   - `cron` and `tmpreaper` to clean /tmp *and* /usr/local/tomcat/temp
   - Tomcat Native library
+  - [confd](http://www.confd.io/)
 
-Important Paths:
+Size: 505MB
+
+## Important Paths
   - $CATALINA_HOME is `/usr/local/tomcat`
-  - $JAVA_HOME is `/usr/lib/jvm/java-8-oracle`
 
 ## Java Options
 Based on reading and testing, with the help and direction of [@g7Morris](https://github.com/g7morris)!
-  - $JAVA_OPTS are `-Djava.awt.headless=true -server -Xmx4096M -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true`
+  - $JAVA_OPTS are `-Djava.awt.headless=true -server -Xmx2G -Xms256M -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true`
   - **NB**: these are not to be confused with $CATALINA_OPTS
 
 ## Generic Usage
 
 ```
-docker run -p 8080:8080 -it --rm islandoracollabgroup/isle-tomcat
+docker run -p 8080:8080 -it --rm islandoracollabgroup/isle-tomcat:serverjre8 bash
 ```
 
-## Tomcat default users
+### Default Login information
 
-admin:isle_admin  
-manager:isle_manager  
+Tomcat Admin
+  - Username: admin
+  - Password: isle_admin 
+
+Tomcat Manager
+  - Username: manager
+  - Password: isle_manager  

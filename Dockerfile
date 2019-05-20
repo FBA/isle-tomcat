@@ -1,8 +1,10 @@
-FROM ubuntu:bionic as isle-tomcat-base
+FROM islandoracollabgroup/isle-ubuntu-basebox:1.1.1
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
+ARG TOMCAT_MAJOR
+ARG TOMCAT_VERSION
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="ISLE Apache Tomcat Base Image" \
       org.label-schema.url="https://islandora-collaboration-group.github.io" \
@@ -12,20 +14,8 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.version=$VERSION \
       org.label-schema.schema-version="1.0"
 
-## S6-Overlay @see: https://github.com/just-containers/s6-overlay
-ADD https://github.com/just-containers/s6-overlay/releases/download/v1.21.4.0/s6-overlay-amd64.tar.gz /tmp/
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
-    rm /tmp/s6-overlay-amd64.tar.gz
-
 ## General Package Installation, Dependencies, Requires.
-RUN GEN_DEP_PACKS="software-properties-common \
-    ca-certificates \
-    dnsutils \
-    cron \
-    curl \
-    wget \
-    unzip \
-    git \
+RUN GEN_DEP_PACKS="cron \
     tmpreaper \
     libapr1-dev \
     libssl-dev \
@@ -34,6 +24,9 @@ RUN GEN_DEP_PACKS="software-properties-common \
     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
     apt-get update && \
     apt-get install --no-install-recommends -y $GEN_DEP_PACKS && \
+    ## CONFD
+    curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 && \
+    chmod +x /usr/local/bin/confd && \
     ## Cleanup phase.
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -47,38 +40,26 @@ RUN touch /var/log/cron.log && \
     chmod 0644 /etc/cron.d/tmpreaper-cron
 
 # Environment
-ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle \
-     JRE_HOME=/usr/lib/jvm/java-8-oracle/jre \
-     CLASSPATH=/usr/lib/jvm/java-8-oracle/jre/lib \
-     JRE_PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin \
-     CATALINA_HOME=/usr/local/tomcat \
-     CATALINA_BASE=/usr/local/tomcat \
-     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
-     LD_LIBRARY_PATH=/usr/local/tomcat/lib:$LD_LIBRARY_PATH \
-     PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/usr/local/tomcat/bin \
-     ## Per Gavin, we are no longer using -XX:+UseConcMarkSweepGC, instead G1GC.
-     ## Ben's understanding after reading and review: though the new G1GC causes greater pauses it GC, it has lower latency delay and pauses in GC over CMSGC.
-     JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
-
-# JAVA PHASE
-# Oracle Java 8
-RUN JAVA_PACKAGES="oracle-java8-installer \
-    oracle-java8-set-default" && \
-    echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 boolean true' | debconf-set-selections && \
-    add-apt-repository -y ppa:webupd8team/java && \
-    apt-get update && \
-    apt-get install --no-install-recommends -y $JAVA_PACKAGES && \
-    ## Cleanup phase.
-    add-apt-repository --remove -y ppa:webupd8team/java && \
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/oracle-jdk8-installer
+ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
+    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.40} \
+    CATALINA_HOME=/usr/local/tomcat \
+    CATALINA_BASE=/usr/local/tomcat \
+    CATALINA_PID=/usr/local/tomcat/tomcat.pid \
+    LD_LIBRARY_PATH=/usr/local/tomcat/lib:$LD_LIBRARY_PATH \
+    PATH=$PATH:/usr/local/tomcat/bin \
+    JAVA_MAX_MEM=${JAVA_MAX_MEM:-2G} \
+    JAVA_MIN_MEM=${JAVA_MIN_MEM:-256M} \
+    ## Per Gavin, we are no longer using -XX:+UseConcMarkSweepGC, instead G1GC.
+    ## Ben's understanding after reading and review: though the new G1GC causes greater pauses it GC, it has lower latency delay and pauses in GC over CMSGC.
+    JAVA_OPTS='-Djava.awt.headless=true -server -Xmx${JAVA_MAX_MEM} -Xms${JAVA_MIN_MEM} -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true'
 
 # TOMCAT PHASE
-# Apache Tomcat 8.5.32
+# Apache Tomcat
 RUN mkdir -p /usr/local/tomcat && \
     mkdir -p /tmp/tomcat-native && \
-    curl -o /tmp/apache-tomcat-8.5.32.tar.gz -L http://mirrors.koehn.com/apache/tomcat/tomcat-8/v8.5.32/bin/apache-tomcat-8.5.32.tar.gz && \
-    tar xzf /tmp/apache-tomcat-8.5.32.tar.gz -C /usr/local/tomcat --strip-components=1 && \
+    cd /tmp && \
+    curl -O -L "https://www.apache.org/dyn/closer.cgi?action=download&filename=tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz" && \
+    tar xzf /tmp/apache-tomcat-$TOMCAT_VERSION.tar.gz -C /usr/local/tomcat --strip-components=1 && \
     useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/bash tomcat && \
     # Tomcat Native
     tar xzf /usr/local/tomcat/bin/tomcat-native.tar.gz -C /tmp/tomcat-native --strip-components=1 && \
@@ -89,10 +70,11 @@ RUN mkdir -p /usr/local/tomcat && \
     echo "/usr/local/tomcat/lib" > /etc/ld.so.conf.d/tomcat-native.conf && \
     ldconfig && \
     echo 'LD_LIBRARY_PATH=$CATALINA_HOME/lib:$LD_LIBRARY_PATH\nexport LD_LIBRARY_PATH' > $CATALINA_HOME/bin/setenv.sh && \
+    chown -R tomcat:tomcat $CATALINA_HOME && \
     ## Cleanup phase.
     rm $CATALINA_HOME/bin/tomcat-native.tar.gz && \
     rm -rf $CATALINA_HOME/webapps/docs $CATALINA_HOME/webapps/examples $CATALINA_HOME/bin/*.bat && \
-    apt-get purge -y --auto-remove gcc gcc-7-base make software-properties-common openjdk* && \
+    apt-get purge -y --auto-remove gcc gcc-7-base make && \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
