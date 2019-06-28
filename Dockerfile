@@ -1,4 +1,4 @@
-FROM islandoracollabgroup/isle-ubuntu-basebox:1.1.1
+FROM adoptopenjdk/openjdk8:latest
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -7,6 +7,7 @@ ARG TOMCAT_MAJOR
 ARG TOMCAT_VERSION
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="ISLE Apache Tomcat Base Image" \
+      org.label-schema.description="ISLE base Docker images based on Ubuntu 18.04 (Bionic), S6 Overlay, and AdoptJDK." \
       org.label-schema.url="https://islandora-collaboration-group.github.io" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/Islandora-Collaboration-Group/isle-tomcat" \
@@ -16,6 +17,11 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 ## General Package Installation, Dependencies, Requires.
 RUN GEN_DEP_PACKS="cron \
+    dnsutils \
+    wget \
+    rsync \
+    git \
+    unzip \
     tmpreaper \
     libapr1-dev \
     libssl-dev \
@@ -31,6 +37,12 @@ RUN GEN_DEP_PACKS="cron \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+## S6-Overlay @see: https://github.com/just-containers/s6-overlay
+ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-1.21.7.0}
+ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz /tmp/
+RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
+    rm /tmp/s6-overlay-amd64.tar.gz
+
 ## tmpreaper - cleanup /tmp on the running container
 # @todo ask Gavin is this is still necessary and/or what the intention was/is!
 RUN touch /var/log/cron.log && \
@@ -41,7 +53,7 @@ RUN touch /var/log/cron.log && \
 
 # Environment
 ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
-    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.40} \
+    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.42} \
     CATALINA_HOME=/usr/local/tomcat \
     CATALINA_BASE=/usr/local/tomcat \
     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
