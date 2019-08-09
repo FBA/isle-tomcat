@@ -1,0 +1,10 @@
+[template]
+src = "tomcat/tomcat-logging.properties.tpl"
+dest = "/usr/local/tomcat/conf/logging.properties"
+mode = "0644"
+keys = [
+  "/tomcat/java/util/logging/console/handler",
+  "/tomcat/localhost/log",
+  "/tomcat/localhost/manager/log",
+  "/tomcat/localhost/host/manager/log"
+]

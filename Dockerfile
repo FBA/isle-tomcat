@@ -38,7 +38,7 @@ RUN GEN_DEP_PACKS="cron \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ## S6-Overlay @see: https://github.com/just-containers/s6-overlay
-ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-1.21.7.0}
+ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-1.22.1.0}
 ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz /tmp/
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
     rm /tmp/s6-overlay-amd64.tar.gz
@@ -53,7 +53,7 @@ RUN touch /var/log/cron.log && \
 
 # Environment
 ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
-    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.42} \
+    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.43} \
     CATALINA_HOME=/usr/local/tomcat \
     CATALINA_BASE=/usr/local/tomcat \
     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
