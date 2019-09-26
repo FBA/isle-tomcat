@@ -5,7 +5,7 @@ Designed as the base image for ISLE components requiring Tomcat and OpenJDK Java
 
 Based on:  
  - [Adopt OpenJDK 8 Docker Image](https://hub.docker.com/r/adoptopenjdk/openjdk8)
- - [Tomcat 8.5.45](https://tomcat.apache.org/)
+ - [Tomcat 8.5.x](https://tomcat.apache.org/)
 
 Contains and Includes:
   - `cron` and `tmpreaper` to clean /tmp *and* /usr/local/tomcat/temp
