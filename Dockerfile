@@ -71,7 +71,7 @@ ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
 RUN mkdir -p /usr/local/tomcat && \
     mkdir -p /tmp/tomcat-native && \
     cd /tmp && \
-    curl -O -L "https://www.apache.org/dyn/closer.cgi?action=download&filename=tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz" && \
+    curl -O -L "http://apache.mirrors.pair.com/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz" && \
     tar xzf /tmp/apache-tomcat-$TOMCAT_VERSION.tar.gz -C /usr/local/tomcat --strip-components=1 && \
     useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/bash tomcat && \
     # Tomcat Native
