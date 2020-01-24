@@ -30,7 +30,7 @@ RUN GEN_DEP_PACKS="cron \
     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
     apt-get update && \
     apt-get install --no-install-recommends -y $GEN_DEP_PACKS && \
-    ## CONFD
+    ## CONFD @see: https://github.com/kelseyhightower/confd/releases
     curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 && \
     chmod +x /usr/local/bin/confd && \
     ## Cleanup phase.
@@ -52,6 +52,7 @@ RUN touch /var/log/cron.log && \
     chmod 0644 /etc/cron.d/tmpreaper-cron
 
 # Environment
+# Tomcat @see: https://tomcat.apache.org/
 ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
     TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.50} \
     CATALINA_HOME=/usr/local/tomcat \
