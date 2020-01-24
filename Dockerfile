@@ -1,20 +1,5 @@
 FROM adoptopenjdk/openjdk8:latest
 
-ARG BUILD_DATE
-ARG VCS_REF
-ARG VERSION
-ARG TOMCAT_MAJOR
-ARG TOMCAT_VERSION
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name="ISLE Apache Tomcat Base Image" \
-      org.label-schema.description="ISLE base Docker images based on Ubuntu 18.04 (Bionic), S6 Overlay, and AdoptJDK." \
-      org.label-schema.url="https://islandora-collaboration-group.github.io" \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/Islandora-Collaboration-Group/isle-tomcat" \
-      org.label-schema.vendor="Islandora Collaboration Group (ICG) - islandora-consortium-group@googlegroups.com" \
-      org.label-schema.version=$VERSION \
-      org.label-schema.schema-version="1.0"
-
 ## General Package Installation, Dependencies, Requires.
 RUN GEN_DEP_PACKS="cron \
     dnsutils \
@@ -37,7 +22,8 @@ RUN GEN_DEP_PACKS="cron \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-## S6-Overlay @see: https://github.com/just-containers/s6-overlay
+## S6-Overlay
+# @see: https://github.com/just-containers/s6-overlay
 ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-1.22.1.0}
 ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz /tmp/
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
@@ -51,8 +37,8 @@ RUN touch /var/log/cron.log && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /usr/local/tomcat/temp >> /var/log/cron.log 2>&1" | tee -a /etc/cron.d/tmpreaper-cron && \
     chmod 0644 /etc/cron.d/tmpreaper-cron
 
-# Environment
-# Tomcat @see: https://tomcat.apache.org/
+## Tomcat Environment
+# @see: https://tomcat.apache.org/
 ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
     TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.50} \
     CATALINA_HOME=/usr/local/tomcat \
@@ -66,8 +52,7 @@ ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
     ## Ben's understanding after reading and review: though the new G1GC causes greater pauses it GC, it has lower latency delay and pauses in GC over CMSGC.
     JAVA_OPTS='-Djava.awt.headless=true -server -Xmx${JAVA_MAX_MEM} -Xms${JAVA_MIN_MEM} -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true'
 
-# TOMCAT PHASE
-# Apache Tomcat
+## Tomcat Installation
 RUN mkdir -p /usr/local/tomcat && \
     mkdir -p /tmp/tomcat-native && \
     cd /tmp && \
@@ -90,6 +75,22 @@ RUN mkdir -p /usr/local/tomcat && \
     apt-get purge -y --auto-remove gcc gcc-7-base make && \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+## Labels
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
+ARG TOMCAT_MAJOR
+ARG TOMCAT_VERSION
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name="ISLE Apache Tomcat Base Image" \
+      org.label-schema.description="ISLE base Docker images based on Ubuntu 18.04 (Bionic), S6 Overlay, and AdoptJDK." \
+      org.label-schema.url="https://islandora-collaboration-group.github.io" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url="https://github.com/Islandora-Collaboration-Group/isle-tomcat" \
+      org.label-schema.vendor="Islandora Collaboration Group (ICG) - islandora-consortium-group@googlegroups.com" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.schema-version="1.0"
 
 COPY rootfs /
 
