@@ -40,7 +40,7 @@ RUN touch /var/log/cron.log && \
 ## Tomcat Environment
 # @see: https://tomcat.apache.org/
 ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
-    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.50} \
+    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.53} \
     CATALINA_HOME=/usr/local/tomcat \
     CATALINA_BASE=/usr/local/tomcat \
     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
