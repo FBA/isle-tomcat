@@ -4,19 +4,19 @@
 Designed as the base image for ISLE components requiring Tomcat and OpenJDK Java. These include Solr, Image Services, and Fedora.
 
 Based on:  
- - [Adopt OpenJDK 8 Docker Image](https://hub.docker.com/r/adoptopenjdk/openjdk8)
- - [Tomcat 8.5.x](https://tomcat.apache.org/)
+* [Adopt OpenJDK 8 Docker Image](https://hub.docker.com/r/adoptopenjdk/openjdk8)
+* [Tomcat 8.5.x](https://tomcat.apache.org/)
 
 Contains and Includes:
-  - `cron` and `tmpreaper` to clean /tmp *and* /usr/local/tomcat/temp
-  - Tomcat Native library
-  - [confd](http://www.confd.io/)
+* `cron` and `tmpreaper` to clean /tmp *and* /usr/local/tomcat/temp
+* Tomcat Native library
+* [confd](http://www.confd.io/)
 
 ## Important Paths
-  - $CATALINA_HOME is `/usr/local/tomcat`
+* $CATALINA_HOME is `/usr/local/tomcat`
 
 ## Java Options
- - See [Dockerfile](https://github.com/Islandora-Collaboration-Group/isle-tomcat/blob/master/Dockerfile) for default ENV values.
+* See [Dockerfile](https://github.com/Islandora-Collaboration-Group/isle-tomcat/blob/master/Dockerfile) for default ENV values.
 
 ## Usage
 
@@ -24,5 +24,6 @@ Contains and Includes:
   * [Solr](https://github.com/Islandora-Collaboration-Group/isle-solr)
   * [Image Services](https://github.com/Islandora-Collaboration-Group/isle-imageservices)
   * [Fedora](https://github.com/Islandora-Collaboration-Group/isle-fedora)
+  * [Blazegraph](https://github.com/Islandora-Collaboration-Group/isle-blazegraph)
 
 * For general usage of this image and [ISLE](https://github.com/Islandora-Collaboration-Group/ISLE), please refer to [ISLE documentation](https://islandora-collaboration-group.github.io/ISLE/)
