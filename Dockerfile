@@ -30,7 +30,6 @@ RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
     rm /tmp/s6-overlay-amd64.tar.gz
 
 ## tmpreaper - cleanup /tmp on the running container
-# @todo ask Gavin is this is still necessary and/or what the intention was/is!
 RUN touch /var/log/cron.log && \
     touch /etc/cron.d/tmpreaper-cron && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | tee /etc/cron.d/tmpreaper-cron && \
