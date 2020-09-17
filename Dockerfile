@@ -24,13 +24,12 @@ RUN GEN_DEP_PACKS="cron \
 
 ## S6-Overlay
 # @see: https://github.com/just-containers/s6-overlay
-ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.0.0.1}
+ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.1.0.0}
 ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz /tmp/
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
     rm /tmp/s6-overlay-amd64.tar.gz
 
 ## tmpreaper - cleanup /tmp on the running container
-# @todo ask Gavin is this is still necessary and/or what the intention was/is!
 RUN touch /var/log/cron.log && \
     touch /etc/cron.d/tmpreaper-cron && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | tee /etc/cron.d/tmpreaper-cron && \
