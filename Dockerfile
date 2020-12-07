@@ -24,7 +24,7 @@ RUN GEN_DEP_PACKS="cron \
 
 ## S6-Overlay
 # @see: https://github.com/just-containers/s6-overlay
-ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.1.0.0}
+ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.1.0.2}
 ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz /tmp/
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
     rm /tmp/s6-overlay-amd64.tar.gz
@@ -39,7 +39,7 @@ RUN touch /var/log/cron.log && \
 ## Tomcat Environment
 # @see: https://tomcat.apache.org/
 ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
-    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.57} \
+    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.60} \
     CATALINA_HOME=/usr/local/tomcat \
     CATALINA_BASE=/usr/local/tomcat \
     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
@@ -83,7 +83,7 @@ ARG TOMCAT_MAJOR
 ARG TOMCAT_VERSION
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="ISLE Apache Tomcat Base Image" \
-      org.label-schema.description="ISLE base Docker images based on Ubuntu 18.04 (Bionic), S6 Overlay, and AdoptJDK." \
+      org.label-schema.description="ISLE base Docker images based on Ubuntu 20.04 (Bionic), S6 Overlay, and AdoptJDK." \
       org.label-schema.url="https://islandora-collaboration-group.github.io" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/Islandora-Collaboration-Group/isle-tomcat" \
