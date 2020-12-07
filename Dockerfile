@@ -36,7 +36,9 @@ RUN touch /var/log/cron.log && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /usr/local/tomcat/temp >> /var/log/cron.log 2>&1" | tee -a /etc/cron.d/tmpreaper-cron && \
     chmod 0644 /etc/cron.d/tmpreaper-cron
 
-RUN echo "Start Tomcat ENVS - where does this fail 1?"
+RUN echo "Start Tomcat ENVS - where does this fail 1?" 
+
+RUN echo "Start Tomcat ENVS - where does this fail 2?" 
 
 ## Tomcat Environment
 # @see: https://tomcat.apache.org/
@@ -53,8 +55,7 @@ ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
     ## Ben's understanding after reading and review: though the new G1GC causes greater pauses it GC, it has lower latency delay and pauses in GC over CMSGC.
     JAVA_OPTS='-Djava.awt.headless=true -server -Xmx${JAVA_MAX_MEM} -Xms${JAVA_MIN_MEM} -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true'
 
-RUN echo "Start Tomcat Installation - where does this fail 2?"
-
+RUN echo "Start Tomcat Installation - where does this fail 3?" \
 ## Tomcat Installation
 RUN mkdir -p /usr/local/tomcat && \
     mkdir -p /tmp/tomcat-native && \
