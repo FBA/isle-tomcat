@@ -29,6 +29,14 @@ ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
     rm /tmp/s6-overlay-amd64.tar.gz
 
+RUN echo "Am I working now?"
+
+RUN pwd
+
+RUN ls
+
+RUN mkdir -p /var/log
+
 ## tmpreaper - cleanup /tmp on the running container
 RUN mkdir -p /var/log && \
     touch /var/log/cron.log && \
