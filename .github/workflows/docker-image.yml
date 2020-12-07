@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: /bin/bash --login    
+        shell: bash 
     steps:
       -
         name: Checkout
@@ -41,10 +41,8 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          shell: bash
           push: true
-          tags: ${{ secrets.IMAGE_REPO_ORG }}/isle-tomcat:${{ secrets.ISLE_7_IMAGE_TAG }}
-      
+          tags: ${{ secrets.IMAGE_REPO_ORG }}/isle-tomcat:${{ secrets.ISLE_7_IMAGE_TAG }}     
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
