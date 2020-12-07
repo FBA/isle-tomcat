@@ -17,7 +17,7 @@ RUN GEN_DEP_PACKS="cron \
     apt-get install --no-install-recommends -y $GEN_DEP_PACKS && \
     ## CONFD @see: https://github.com/kelseyhightower/confd/releases
     curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 && \
-    chmod +x /usr/local/bin/confd && \
+    /bin/chmod +x /usr/local/bin/confd && \
     ## Cleanup phase.
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -29,14 +29,14 @@ ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
     rm /tmp/s6-overlay-amd64.tar.gz
 
-ENV PATH=$PATH:/usr/bin/sh
+#ENV PATH="/usr/bin/sh:$PATH"
 
 ## tmpreaper - cleanup /tmp on the running container
 RUN /usr/bin/touch /var/log/cron.log && \
     /usr/bin/touch /etc/cron.d/tmpreaper-cron && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | /usr/bin/tee /etc/cron.d/tmpreaper-cron && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /usr/local/tomcat/temp >> /var/log/cron.log 2>&1" | /usr/bin/tee -a /etc/cron.d/tmpreaper-cron && \
-    /usr/bin/chmod 0644 /etc/cron.d/tmpreaper-cron
+    /bin/chmod 0644 /etc/cron.d/tmpreaper-cron
 
 ## Tomcat Environment
 # @see: https://tomcat.apache.org/
@@ -59,8 +59,7 @@ RUN mkdir -p /usr/local/tomcat && \
     cd /tmp && \
     curl -O -L "http://apache.mirrors.pair.com/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz" && \
     tar xzf /tmp/apache-tomcat-$TOMCAT_VERSION.tar.gz -C /usr/local/tomcat --strip-components=1 && \
-    #useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/bash tomcat && \
-    useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/sh tomcat && \
+    useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/bash tomcat && \
     # Tomcat Native
     tar xzf /usr/local/tomcat/bin/tomcat-native.tar.gz -C /tmp/tomcat-native --strip-components=1 && \
     cd /tmp/tomcat-native/native && \
@@ -98,4 +97,4 @@ COPY rootfs /
 
 EXPOSE 8080
 
-ENTRYPOINT ["bash", "/init"]
+ENTRYPOINT ["/init"]
