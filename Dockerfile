@@ -98,4 +98,4 @@ COPY rootfs /
 
 EXPOSE 8080
 
-ENTRYPOINT ["/init"]
+ENTRYPOINT ["bash", "/init"]
