@@ -8,9 +8,9 @@ name: ci
 # This will result in the image {{ IMAGE_REPO_ORG }}/isle-tomcat:ISLE-v.1.5.3-dev
 on:
   push:
-    branches: [ ISLE-v.*-dev ]
+    branches: [ ISLE-v.1.5.3-dev ]
   pull_request:
-    branches: [ ISLE-v.*-dev ]
+    branches: [ ISLE-v.1.5.3-dev ]
 
 jobs:
   main:
