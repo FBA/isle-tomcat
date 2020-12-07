@@ -10,8 +10,7 @@ RUN GEN_DEP_PACKS="cron \
     tmpreaper \
     libapr1-dev \
     libssl-dev \
-    gcc \
-    make" && \
+    build-essential" && \
     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
     apt-get update && \
     apt-get install --no-install-recommends -y $GEN_DEP_PACKS && \
@@ -25,9 +24,6 @@ RUN GEN_DEP_PACKS="cron \
 ## S6-Overlay
 # @see: https://github.com/just-containers/s6-overlay
 ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.1.0.2}
-#ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz /tmp/
-#RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
-#    rm /tmp/s6-overlay-amd64.tar.gz
 ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64-installer /tmp/
 RUN chmod +x /tmp/s6-overlay-amd64-installer && \
     /tmp/s6-overlay-amd64-installer /
@@ -74,7 +70,7 @@ RUN mkdir -p /usr/local/tomcat && \
     ## Cleanup phase.
     rm $CATALINA_HOME/bin/tomcat-native.tar.gz && \
     rm -rf $CATALINA_HOME/webapps/docs $CATALINA_HOME/webapps/examples $CATALINA_HOME/bin/*.bat && \
-    apt-get purge -y --auto-remove gcc gcc-7-base make && \
+    apt-get purge -y --auto-remove build-essential && \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
