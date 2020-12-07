@@ -22,7 +22,6 @@ RUN GEN_DEP_PACKS="cron \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-
 ## S6-Overlay
 # @see: https://github.com/just-containers/s6-overlay
 ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.1.0.2}
@@ -51,7 +50,6 @@ ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
     ## Per Gavin, we are no longer using -XX:+UseConcMarkSweepGC, instead G1GC.
     ## Ben's understanding after reading and review: though the new G1GC causes greater pauses it GC, it has lower latency delay and pauses in GC over CMSGC.
     JAVA_OPTS='-Djava.awt.headless=true -server -Xmx${JAVA_MAX_MEM} -Xms${JAVA_MIN_MEM} -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true'
-
 
 ## Tomcat Installation
 RUN mkdir -p /usr/local/tomcat && \
