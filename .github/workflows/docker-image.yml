@@ -24,10 +24,10 @@ jobs:
       run: echo ${{secrets.DOCKER_REPO_PASSWORD}} | docker login -u ${{secrets.DOCKER_REPO_USERNAME}} --password-stdin
   
     - name: Build the tagged Docker image
-      run: docker build . --file Dockerfile --tag {{IMAGE_REPO_ORG}}/isle-tomcat:${{ISLE_7_IMAGE_TAG}}
+      run: docker build . --file Dockerfile --tag ${{IMAGE_REPO_ORG}}/isle-tomcat:${{ISLE_7_IMAGE_TAG}}
     
     - name: Push the tagged Docker image
-      run: docker push {{IMAGE_REPO_ORG}}/isle-tomcat:${{ISLE_7_IMAGE_TAG}}
+      run: docker push ${{IMAGE_REPO_ORG}}/isle-tomcat:${{ISLE_7_IMAGE_TAG}}
 
 # ICG ISLE build process will also build and tag "latest"
 #    - name: Build the latest Docker image
