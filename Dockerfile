@@ -22,12 +22,6 @@ RUN GEN_DEP_PACKS="cron \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN echo "Whose path?" && \
-    ls -lhat /bin/ &&\
-    echo $PATH && \
-    which sh && \
-    which bash
-
 
 ## S6-Overlay
 # @see: https://github.com/just-containers/s6-overlay
