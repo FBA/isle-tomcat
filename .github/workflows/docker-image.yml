@@ -27,6 +27,9 @@ jobs:
 
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        Default: ${{ github.repository }}
+        ref: 'ISLE-v.1.5.3-dev'
 
     - name: Build the tagged Docker image
       run: docker build . --file Dockerfile --tag ${{ secrets.IMAGE_REPO_ORG }}/isle-tomcat:${{ secrets.ISLE_7_IMAGE_TAG }}
