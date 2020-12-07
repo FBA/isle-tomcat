@@ -35,8 +35,9 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.IMAGE_REPO_ORG }}/isle-tomcat:${{ secrets.ISLE_7_IMAGE_TAG }}
-          secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.DOCKERHUB_TOKEN }}
+          build-args: |
+            arg1=value1
+            arg2=value2
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
