@@ -62,7 +62,8 @@ RUN mkdir -p /usr/local/tomcat && \
     cd /tmp && \
     curl -O -L "http://apache.mirrors.pair.com/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz" && \
     tar xzf /tmp/apache-tomcat-$TOMCAT_VERSION.tar.gz -C /usr/local/tomcat --strip-components=1 && \
-    useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/bash tomcat && \
+    #useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/bash tomcat && \
+    useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/sh tomcat && \
     # Tomcat Native
     tar xzf /usr/local/tomcat/bin/tomcat-native.tar.gz -C /tmp/tomcat-native --strip-components=1 && \
     cd /tmp/tomcat-native/native && \
