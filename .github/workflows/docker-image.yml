@@ -42,7 +42,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.IMAGE_REPO_ORG }}/isle-tomcat:${{ secrets.ISLE_7_IMAGE_TAG }}     
+          tags: borndigital/isle-tomcat:1.5.3-dev
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

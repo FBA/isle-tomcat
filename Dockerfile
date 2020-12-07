@@ -1,12 +1,5 @@
 FROM adoptopenjdk/openjdk8:latest
 
-## tmpreaper - cleanup /tmp on the running container
-RUN touch /var/log/cron.log && \
-    touch /etc/cron.d/tmpreaper-cron && \
-    echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | tee /etc/cron.d/tmpreaper-cron && \
-    echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /usr/local/tomcat/temp >> /var/log/cron.log 2>&1" | tee -a /etc/cron.d/tmpreaper-cron && \
-    chmod 0644 /etc/cron.d/tmpreaper-cron
-
 ## General Package Installation, Dependencies, Requires.
 RUN GEN_DEP_PACKS="cron \
     dnsutils \
@@ -32,9 +25,12 @@ RUN GEN_DEP_PACKS="cron \
 ## S6-Overlay
 # @see: https://github.com/just-containers/s6-overlay
 ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.1.0.2}
-ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz /tmp/
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
-    rm /tmp/s6-overlay-amd64.tar.gz
+#ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz /tmp/
+#RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
+#    rm /tmp/s6-overlay-amd64.tar.gz
+ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64-installer /tmp/
+RUN chmod +x /tmp/s6-overlay-amd64-installer && \
+    /tmp/s6-overlay-amd64-installer /
 
 ## tmpreaper - cleanup /tmp on the running container
 RUN touch /var/log/cron.log && \
