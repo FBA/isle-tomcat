@@ -38,6 +38,8 @@ RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
 #    echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /usr/local/tomcat/temp >> /var/log/cron.log 2>&1" | /usr/bin/tee -a /etc/cron.d/tmpreaper-cron && \
 #    /bin/chmod 0644 /etc/cron.d/tmpreaper-cron
 
+RUN which sh && which bash
+RUN ls -lha /var/ && ls -lha /var/log
 RUN /usr/bin/touch /var/log/cron.log
 RUN /usr/bin/touch /etc/cron.d/tmpreaper-cron
 RUN echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | /usr/bin/tee /etc/cron.d/tmpreaper-cron
