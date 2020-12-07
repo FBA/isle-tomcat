@@ -15,6 +15,9 @@ on:
 jobs:
   main:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash    
     steps:
       -
         name: Checkout
@@ -40,8 +43,7 @@ jobs:
           file: ./Dockerfile          
           push: true
           tags: ${{ secrets.IMAGE_REPO_ORG }}/isle-tomcat:${{ secrets.ISLE_7_IMAGE_TAG }}
-          build-args: |
-            arg1=--buildkitd-flags '--debug'
+      
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

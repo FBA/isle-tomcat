@@ -32,19 +32,12 @@ RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
 #ENV PATH="/usr/bin/sh:$PATH"
 
 ## tmpreaper - cleanup /tmp on the running container
-#RUN /usr/bin/touch /var/log/cron.log && \
-#    /usr/bin/touch /etc/cron.d/tmpreaper-cron && \
-#    echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | /usr/bin/tee /etc/cron.d/tmpreaper-cron && \
-#    echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /usr/local/tomcat/temp >> /var/log/cron.log 2>&1" | /usr/bin/tee -a /etc/cron.d/tmpreaper-cron && \
-#    /bin/chmod 0644 /etc/cron.d/tmpreaper-cron
+RUN touch /var/log/cron.log && \
+    touch /etc/cron.d/tmpreaper-cron && \
+    echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | tee /etc/cron.d/tmpreaper-cron && \
+    echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /usr/local/tomcat/temp >> /var/log/cron.log 2>&1" | tee -a /etc/cron.d/tmpreaper-cron && \
+    chmod 0644 /etc/cron.d/tmpreaper-cron
 
-RUN which sh && which bash
-RUN ls -lha /var/ && ls -lha /var/log
-RUN /usr/bin/touch /var/log/cron.log
-RUN /usr/bin/touch /etc/cron.d/tmpreaper-cron
-RUN echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | /usr/bin/tee /etc/cron.d/tmpreaper-cron
-RUN echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /usr/local/tomcat/temp >> /var/log/cron.log 2>&1" | /usr/bin/tee -a /etc/cron.d/tmpreaper-cron
-RUN /bin/chmod 0644 /etc/cron.d/tmpreaper-cron
 
 ## Tomcat Environment
 # @see: https://tomcat.apache.org/
