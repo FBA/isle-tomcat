@@ -29,8 +29,6 @@ ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
     rm /tmp/s6-overlay-amd64.tar.gz
 
-#ENV PATH="/usr/bin/sh:$PATH"
-
 ## tmpreaper - cleanup /tmp on the running container
 RUN mkdir -p /var/log && \
     touch /var/log/cron.log && \
@@ -38,7 +36,6 @@ RUN mkdir -p /var/log && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | tee /etc/cron.d/tmpreaper-cron && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /usr/local/tomcat/temp >> /var/log/cron.log 2>&1" | tee -a /etc/cron.d/tmpreaper-cron && \
     chmod 0644 /etc/cron.d/tmpreaper-cron
-
 
 ## Tomcat Environment
 # @see: https://tomcat.apache.org/
