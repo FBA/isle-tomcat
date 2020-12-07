@@ -28,7 +28,7 @@ ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.1.0.2}
 ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz /tmp/
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && rm /tmp/s6-overlay-amd64.tar.gz
 
-RUN echo "Am I working now?"
+RUN echo 'Am I working now?'
 
 RUN pwd
 
