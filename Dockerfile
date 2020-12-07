@@ -32,8 +32,8 @@ RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
 #ENV PATH="/usr/bin/sh:$PATH"
 
 ## tmpreaper - cleanup /tmp on the running container
-RUN ls -lha /var/log/
-RUN touch /var/log/cron.log && \
+RUN mkdir -p /var/log && \
+    touch /var/log/cron.log && \
     touch /etc/cron.d/tmpreaper-cron && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | tee /etc/cron.d/tmpreaper-cron && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /usr/local/tomcat/temp >> /var/log/cron.log 2>&1" | tee -a /etc/cron.d/tmpreaper-cron && \
