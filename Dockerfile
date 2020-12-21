@@ -10,24 +10,23 @@ RUN GEN_DEP_PACKS="cron \
     tmpreaper \
     libapr1-dev \
     libssl-dev \
-    gcc \
-    make" && \
+    build-essential" && \
     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
     apt-get update && \
     apt-get install --no-install-recommends -y $GEN_DEP_PACKS && \
     ## CONFD @see: https://github.com/kelseyhightower/confd/releases
     curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 && \
-    chmod +x /usr/local/bin/confd && \
+    /bin/chmod +x /usr/local/bin/confd && \
     ## Cleanup phase.
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ## S6-Overlay
 # @see: https://github.com/just-containers/s6-overlay
-ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.1.0.0}
-ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz /tmp/
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
-    rm /tmp/s6-overlay-amd64.tar.gz
+ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.1.0.2}
+ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64-installer /tmp/
+RUN chmod +x /tmp/s6-overlay-amd64-installer && \
+    /tmp/s6-overlay-amd64-installer /
 
 ## tmpreaper - cleanup /tmp on the running container
 RUN touch /var/log/cron.log && \
@@ -39,7 +38,7 @@ RUN touch /var/log/cron.log && \
 ## Tomcat Environment
 # @see: https://tomcat.apache.org/
 ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
-    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.57} \
+    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.61} \
     CATALINA_HOME=/usr/local/tomcat \
     CATALINA_BASE=/usr/local/tomcat \
     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
@@ -71,7 +70,7 @@ RUN mkdir -p /usr/local/tomcat && \
     ## Cleanup phase.
     rm $CATALINA_HOME/bin/tomcat-native.tar.gz && \
     rm -rf $CATALINA_HOME/webapps/docs $CATALINA_HOME/webapps/examples $CATALINA_HOME/bin/*.bat && \
-    apt-get purge -y --auto-remove gcc gcc-7-base make && \
+    apt-get purge -y --auto-remove build-essential && \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -83,7 +82,7 @@ ARG TOMCAT_MAJOR
 ARG TOMCAT_VERSION
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="ISLE Apache Tomcat Base Image" \
-      org.label-schema.description="ISLE base Docker images based on Ubuntu 18.04 (Bionic), S6 Overlay, and AdoptJDK." \
+      org.label-schema.description="ISLE base Docker images based on Ubuntu 20.04 (Bionic), S6 Overlay, and AdoptJDK." \
       org.label-schema.url="https://islandora-collaboration-group.github.io" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/Islandora-Collaboration-Group/isle-tomcat" \
