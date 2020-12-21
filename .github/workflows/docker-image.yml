@@ -7,9 +7,9 @@ name: ga-ci
 
 on:
   push:
-    branches: [ ISLE-v.* ]
+    branches: [ ISLE-* ]
   pull_request:
-    branches: [ ISLE-v.* ]
+    branches: [ ISLE-* ]
 
 jobs:
   main:
