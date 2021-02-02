@@ -1,4 +1,5 @@
-FROM adoptopenjdk/openjdk8:latest
+# @see https://github.com/AdoptOpenJDK/openjdk-docker/blob/master/8/jdk/ubuntu/Dockerfile.hotspot.releases.full
+FROM adoptopenjdk:8-jdk-hotspot
 
 ## General Package Installation, Dependencies, Requires.
 RUN GEN_DEP_PACKS="cron \
@@ -23,7 +24,7 @@ RUN GEN_DEP_PACKS="cron \
 
 ## S6-Overlay
 # @see: https://github.com/just-containers/s6-overlay
-ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.1.0.2}
+ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.2.0.1}
 ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64-installer /tmp/
 RUN chmod +x /tmp/s6-overlay-amd64-installer && \
     /tmp/s6-overlay-amd64-installer /
