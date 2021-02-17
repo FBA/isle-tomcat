@@ -1,4 +1,5 @@
-FROM adoptopenjdk/openjdk8:latest
+# @see https://github.com/AdoptOpenJDK/openjdk-docker/blob/master/8/jdk/ubuntu/Dockerfile.hotspot.releases.full
+FROM adoptopenjdk:8-jdk-hotspot
 
 ## General Package Installation, Dependencies, Requires.
 RUN GEN_DEP_PACKS="cron \
@@ -23,7 +24,7 @@ RUN GEN_DEP_PACKS="cron \
 
 ## S6-Overlay
 # @see: https://github.com/just-containers/s6-overlay
-ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.1.0.2}
+ENV S6_OVERLAY_VERSION=${S6_OVERLAY_VERSION:-2.2.0.3}
 ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6_OVERLAY_VERSION/s6-overlay-amd64-installer /tmp/
 RUN chmod +x /tmp/s6-overlay-amd64-installer && \
     /tmp/s6-overlay-amd64-installer /
@@ -38,7 +39,7 @@ RUN touch /var/log/cron.log && \
 ## Tomcat Environment
 # @see: https://tomcat.apache.org/
 ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
-    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.61} \
+    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.63} \
     CATALINA_HOME=/usr/local/tomcat \
     CATALINA_BASE=/usr/local/tomcat \
     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
