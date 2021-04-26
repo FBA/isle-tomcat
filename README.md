@@ -3,7 +3,7 @@
 ## Part of the ISLE Islandora 7.x Docker Images
 Designed as the base image for ISLE components requiring Tomcat and OpenJDK Java. These include Solr, Image Services, and Fedora.
 
-Based on:  
+Based on:
 * [Adopt OpenJDK 8 Docker Image](https://hub.docker.com/r/adoptopenjdk/openjdk8)
 * [Tomcat 8.5.x](https://tomcat.apache.org/)
 
