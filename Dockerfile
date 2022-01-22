@@ -1,5 +1,5 @@
-# @see https://github.com/AdoptOpenJDK/openjdk-docker/blob/master/8/jdk/ubuntu/Dockerfile.hotspot.releases.full
-FROM adoptopenjdk:8-jdk-hotspot
+# @see https://github.com/adoptium/containers/blob/main/8/jdk/ubuntu/Dockerfile.releases.full for newer supported java updates
+FROM eclipse-temurin:8-jdk-focal
 
 ## General Package Installation, Dependencies, Requires.
 RUN GEN_DEP_PACKS="cron \
