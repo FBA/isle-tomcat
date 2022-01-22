@@ -1,5 +1,5 @@
-# @see https://github.com/AdoptOpenJDK/openjdk-docker/blob/master/8/jdk/ubuntu/Dockerfile.hotspot.releases.full
-FROM adoptopenjdk:8-jdk-hotspot
+# @see https://github.com/adoptium/containers/blob/main/8/jdk/ubuntu/Dockerfile.releases.full for newer supported java updates
+FROM eclipse-temurin:8-jdk-focal
 
 ## General Package Installation, Dependencies, Requires.
 RUN GEN_DEP_PACKS="cron \
@@ -39,7 +39,7 @@ RUN touch /var/log/cron.log && \
 ## Tomcat Environment
 # @see: https://tomcat.apache.org/
 ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
-    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.73} \
+    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.75} \
     CATALINA_HOME=/usr/local/tomcat \
     CATALINA_BASE=/usr/local/tomcat \
     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
